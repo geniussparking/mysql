@@ -1,3 +1,48 @@
+实际操作部分：
+一、进入数据库：
+本地已经安装wampserver，如何dos切换到mysql：
+打开dos界面，输入cd /d E:\wamp64\bin\mysql\mysql5.7.14\bin,回车就切换成功
+输入mysql -uroot -p 回车，进入默认数据库
+或者直接在wampserver图标点左键，找到mysql控制台，输入密码就可以了
+
+命令：
+show databases; -->显示目前mysql系统里面有多少个数据库；
+create database test01; -->创建一个名字叫test01的数据库;
+drop database test01; -->删除数据库;
+use test01; 使用test01的数据库;
+现在可以在这个数据库开始操作了！
+show tables; --> 展示当前数据库中所有的表;
+create table t1(id1 int,id2 int); 创建表单，字段名为id1和id2，都是整形；这里int后面可以放入第三个参数，表示列的约束条件。
+ desc t1;创建完表之后可以查看表的定义
+ show create table t1\G 查看详细的信息,这里\G能让控制台输出更加直观的信息
+drop table t1; -->删除表
+alter table t1 modify column d1 tinyint; -->将表t1中的字段名为d1的数据类型改成tinyint，这里的column可加可不加
+
+注意：
+desc t1;
+show create table t1;
+show create table t1\G 查看某张新创建的表结构的三种方法
+
+alter table t1 add column d3 int; 增加字段，int型数据;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+课堂笔记部分：
 一、数据库基本概念
 	数据库：信息存储的仓库，包括一系列的关系措施！
 	表:一个数据库中可以有若干张表（形式上你可以看出我们日常生活中建立的表）
@@ -58,19 +103,4 @@
                alter table 表名 rename [to] 新的表名;
 			
 	
-一、进入数据库：
-本地已经安装wampserver，如何dos切换到mysql：
-打开dos界面，输入cd /d E:\wamp64\bin\mysql\mysql5.7.14\bin,回车就切换成功
-输入mysql -uroot -p 回车，进入默认数据库
-或者直接在wampserver图标点左键，找到mysql控制台，输入密码就可以了
 
-命令：
-show databases; -->显示目前mysql系统里面有多少个数据库；
-create database test01; -->创建一个名字叫test01的数据库;
-drop database test01; -->删除数据库;
-use test01; 使用test01的数据库;
-现在可以在这个数据库开始操作了！
-show tables; --> 展示当前数据库中所有的表;
-create table t1(id1 int,id2 int); 创建表单，字段名为id1和id2，都是整形；这里int后面可以放入第三个参数，表示列的约束条件。
- desc t1;创建完表之后可以查看表的定义
- show create table t1\G 查看详细的信息,这里\G能让控制台输出更加直观的信息
