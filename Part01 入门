@@ -74,8 +74,8 @@ select min(salary) from employee;  查询最小值
 select department, sum(salary) from employee group by department; 分类汇总，计算部门的总工资
 select sum(salary) from employee group by department with rollup; 按照部门汇总后，在计算总数；
 select department, sum(salary) from employee group by department having sum(salary)>1000; 分类汇总，但后列出部门工资在1000以上的；
-这里不能用where条件，where是在聚合之前过滤，having是在聚合之后过滤
-
+这里不能用where条件，where是在聚合之前过滤，having是在聚合之后过滤。having的用途在于对聚合后的结果进行过滤
+select min(salary), max(salary), avg(salary), sum(salary), count(*) from employee;
 
 
 
