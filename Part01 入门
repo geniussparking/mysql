@@ -150,6 +150,47 @@ delete from t2 where id=1;  删除指定行； 这里的条件也可以写 where
 			2>删除多个表中的数据
 				delete 表1,表2,...表n from 表1,表2,...表n [where 条件];
 				不管是单表还是多表，不加where条件将会把表中的所有记录删除，所以操作时一定要小心。	
+		4)查询记录
+			select 字段名|* from 表名;
+			1>查询不重复的记录
+				SELECT distinct field1,field2 FROM 表名;
+				只要field1,field2任何一个字段有不同就会被选择！
+				一般使用distinct,只筛选一个字段!
+			2>条件查询
+				注：条件字段比较符号：
+					=,<,>,>=,<=,!=等比较运算符
+					多个条件之间可以使用or and等
+					where 后面接条件
+					select * from 表名 where 条件
+			3>排序和限制
+				排序:
+					asc:由低到高，也是默认值
+						select * from employee order by salary asc;
+					desc:由高到底
+						select * from employee order by salary desc;
+					多个字段排序
+						select * from employee order by salary desc,id desc;
+				限制:
+					在语句的最后面 加上limit 数字1,数字2 来进行查询数量的限制。
+					limit 数字1,数字2 	数字1代表从第几条记录开启取(是从0开始的)，数字2代表取几条！	
+			4>聚合
+				①sum求和
+					select sum(字段名) from 表名;
+				②count记录总数
+					select count(*|字段名) from 表名;
+				③max最大值
+					select max(字段名) from 表名;
+				④min最小值
+					select min(字段名) from 表名;
+				⑤GROUP BY分类聚合
+					select department,sum(salary) from employee group by department;
+				⑥WITH ROLLUP分类聚合后的结果进行再汇总
+					select sum(salary) from employee group by department with rollup;
+				⑦HAVING
+					 注意：having和where的区别在于，having是对聚合后的结果进行条件过滤，而where是在聚合前就对记录进行过滤
+                          ，应该尽可能的对记录进行先过滤！
+					select sum(salary) from employee group by department having sum(salary)>1000;
+				在一起使用：select sum(id),max(id),min(id),count(*) from a1;
 
 
 PPT部分：
