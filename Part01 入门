@@ -54,10 +54,19 @@ update t1 set age=30 where id=1 and age=50; 多条件查询更新
 update t1,t2 set t1.age=25, t2.age=65 where t1.id=2 and t2.id=3; 更新多个表中的记录，这里可以写成t2.id=t1.id
 delete from t2 where id=1;  删除指定行； 这里的条件也可以写 where id>=3;
 
+select查询语句：
+select * from table;
+select id, name, salary from table;
 
+distinct条件
+select distinct name from employee; 从name字段中查询所有不同的name
+select distinct id, name from employee; 这里只要id没有重复的，哪怕name有重复的也会全部列出来
+slect distinct name from employee where id>2 and id<10; 查找一定id范围内，所有不重复的名字
 
-
-
+select * from employee order by salary asc | desc; 按照salary升序|降序排列
+select * from employee order by salary desc, id desc; 按照salary降序，再按照ID降序
+select * from employee order by salary desc limit 2; 按照salary降序，从第三条开始取，直到取完
+select * from employee order by salary desc limit 2,5; 按照salary降序，从第三条开始取，取5条
 
 
 
