@@ -24,10 +24,13 @@ show create table t1;
 show create table t1\G 查看某张新创建的表结构的三种方法
 
 alter table t1 add column d3 int; 增加字段，int型数据;
-
-
-
-
+alter table t1 drop column id3; 删除字段id3
+alter table t1 change column id3 jackwang int; 更改字段名称，用change不能用modify
+alter table t1 change column id3 id3 tinyint; 如果是更改某个字段的数据类型，change后面要加两次id3,modify不用
+alter table t1 modify column id3 tinyint; modify不能改名字，只能改数据类型
+alter table t1 modify column id1 int after id2; 改类型，并改变字段位置，这里是将id1移动到id2的后面去
+alter table t1 modify column id1 int first;将id1移动到第一位
+alter table t1 rename table1; 给表t1重命名为table1;
 
 
 
@@ -103,4 +106,463 @@ alter table t1 add column d3 int; 增加字段，int型数据;
                alter table 表名 rename [to] 新的表名;
 			
 	
+
+PPT部分：
+一、数据库基本概念
+
+二、MySQL支持的数据类型
+
+三、(My)SQL使用入门
+
+四、MySQL中的常见运算符
+
+五、常用函数
+
+六、图形化工具(phpMyAdmin)的使用
+
+
+一、数据库基本概念
+	 	动态网站开发离不开数据存储，数据存储离不开数据库,数据库技术是计算
+	 机技术中的重要部分，在软件开发等领域起着至关重要的作用。
+	 	所谓数据库，可以理解为用来存储信息的仓库。而信息就是要存储下来的一
+	 些数据，比如用户的姓名、年龄、产品的价格、简介，某一个日期时间甚至图像
+	 等等，总之一切可以在计算机中存储下来的数据都可以通过各种方法存储到数据
+	 库中，并且数据库也不仅仅是简单的仓库，他提供了一系列科学的存数据，取数
+	 据，等等其他的管理措施。
+	 	比如我们要学习的MySQL数据库，信息并不是杂乱无章的直接放在MySQL数据
+	 库中的，可以形象的看成是以二维表的形式组织起来的，一条一条存储于表中，
+	 这和日常生活中经常用到的各种表格形式上是一致的。表中的每一条信息称为称
+	 为一条记录。一个数据库中可以有若干张表，每张表中又可以存放若干条记录。
+	 每张表都有自己的“表头”。比如设计一张表格，用来统计学生信息，那么把要
+	 收集的学生的信息分成几个栏目，这些栏目就是“表头”，在数据库技术中，称
+	 为字段。表中横向的多个字段值组成了一条记录，多条记录构成了一张数据表。
+	 上面简明说明了数据库、表、字段和字段值这几个概念。
+	 	数据库系统其实就是一个软件系统，通过这个软件系统可以对大量数据进行
+	 存储和管理。当前市场上的数据库有几十种。对于网站开发而言，MySQL就是当前
+	 web开发中尤其是PHP开发中使用最广泛的数据库。
+二、MySQL支持的数据类型
+	 为了对不同性质的数据进行区分，以提高数据查询和操作的效率，数据库系统将
+	 可以存入的数据分为多种类型。比如 姓名、性别之类的信息为字符串类型，年龄
+	 、价格、分数之类的信息为数字型，日期等为日期时间型。数据类型是针对字段
+	 来说的。有的资料中称为“列类型”或“字段类型”。一个字段一旦设置为某
+	 种类型，那么这个字段中只能存入该类型的数据。MySQL数据库中的数据类型分为
+	 3大类：数值类型、日期类型、字符串类型。
+1.数值类型
+   整数类型	      字节	      范围(有符号)	      	      	范围(无符号)
+   TINYINT	      1	      -128,127	      	      		 0,255
+   SMALLINT	      2	      -32768,32767	      		0,65535
+   MEDIUMINT	      3	      -8388608,8388607      			0,1677215
+   INT、INTEGER   4	      -2147483648,2147483647   		0,4294967295
+   BIGINT	      8	      -9223372036854775808,9223372036854775807            0,18446744073709551615
+   
+  定点数类型
+  DECIMAL(M,D)	占M+2个字节
+  数值类型详细说明：     
+  1>在整数类型中，按照取值范围和存储方式不同，分为tinyint、smallint、mediumint、int和bigint这5个类型。如果超出类型范围的操作
+      会发生“Out of range”错误提示。为了避免此类问题发生，在选择数据类型时要根据应用的实际情况确定其取值范围，最后根据确定的结果 
+      慎重选择数据类型
+  2>对于整形数据，MySQL还支持在类型名称后面的小括号内指定显示宽度,例如int(5)表示当数值宽度小于5位的时候在数字前面填满宽度，如
+      果不显示指定宽度则默认为int(11)。一般配合zerofill使用，顾名思义，zerofill就是用"0"填充的意思。设置了宽度限制后，如果插入大于宽度
+      限制的值，并不会有任何影响，还是按照类型的实际精度进行保存，这是，宽度格式实际已经没有意义，左边不会再填充任何的“0”字符。
+      create table t1(id1 int,id2 int(5));
+      insert into t1 values(1,1);
+      select * from t1;
+      alter table t1 modify id1 int zerofill;
+      alter table t1 modify id2 int(5) zerofill;
+      select * from t1;
+      insert into t1 values(1,111111);
+      select * from t1;
+  3>所有的整数类型都有一个可选属性UNSIGNED(无符号)，如果需要在字段里面保存非负数或者需要较大的上限值时，可以用此选项，它的取
+      值范围是正常值的下限取0，上限取原值的2倍。如果一个列指定为zerofill,则MySQL自动为该列添加UNSIGNED属性。
+   4>整数类型还有一个属性：AUTO_INCREMENT。在需要产生唯一标识符或顺序值时，可利用此属性，这个属性只能用于整数类型。
+       AUTO_INCREMENT值一般从1开始，每行增加1。在插入NULL到一个AUTO_INCREMENT列时，MySQL插入一个比该列中当前最大值大1的值。
+       一个表中最多只能有一个AUTO_INCREMENT列。对于AUTO_INCREMENT列,应该定义为NOT NULL,并且定义为PRIMARY KEY或定义为UNIQUE键   
+      比如：
+       create table t1(id int auto_increment not null primary key);或者:
+       create table t1(id int auto_increment not null,primary key(id));或者:
+       create table t1(id int auto_increment not null,unique(id));
+   5>对于小数的表示，MySQL分为两种方式：浮点数和定点数。浮点数包括float（单精度）和double（双精度），而定点数则只有decimal一种
+       表示。定点数在MySQL内部以字符串形式存放，比浮点数更精确，适合用来表示货币等精度高的数据。
+       浮点数和定点数都可以用类型名称后面加(M,D)的方式来进行表示，(M,D)表示该值一共显示M位数字（整数位+小数位）,其中D位位于小数
+       点后面，M和D又称为精度和标度。
+       对于浮点数，如果有精度和标度则MySQL保存值时会进行四舍五入，系统不会报错。
+       对于定点数，不指定精度和标度的情况下会默认为decimal(10,0)来进行操作，并且如果数据超越了精度和标度值，系统会报错。对于
+       warning信息可以通过show warnings;查看！
+       create table t1(price decimal(5,2) default NULL);
+2.日期类型
+    日期和时间类型	字节	最小值		最大值
+    DATE		4	1000-01-01		9999-12-31
+    DATETIME		8	1000-01-01 00:00:00	9999-12-31 23:59:59
+    TIMESTAMP		4	19700101080001	2038年的某个时刻
+    TIME		3	-838:59:59		838:59:59
+    YEAR		1	1901		2155
+    DATETIME是常用的日期类型
+    create table t1(dt datetime);
+    insert into t1 values(now());
+3.字符串类型
+    字符串类型				描述
+    CHAR(M)				M为0~255之间的整数,表示可以存M个字符
+    VARCHAR(M)			M为0~65535之间的整数,表示可以存M个字符
+    TINYTEXT				允许长度0~255字符
+    TEXT				允许长度0~65535字符
+    MEDIUMTEXT			允许长度0~167772150字符
+    LONGTEXT				允许长度0~42949667295字符
+
+    BINARY(M)				允许长度0~M个字节的定长字节字符串(类似于CHAR类型，但保存二进制字节字符串而
+				        		                       不是非二进制字符串)
+    VARBINARY(M)			允许长度0~M个字节的变长字节字符串类型类似于VARCHAR类型，但保存二进制字节字				         		                       符串而不是非二进制字符串。
+    TINYBLOB				允许长度0~255字节的BLOB列(保存二进制字节字符串)
+    BLOB				允许长度0~65535字节的BLOB列(保存二进制字节字符串)
+    MEDIUMBLOB			允许长度0~167772150字节的BLOB列(保存二进制字节字符串)
+    LONGBLOB				允许长度0~4294967295字节的BLOB列(保存二进制字节字符串)
+
+    ENUM				枚举类型
+    SET				SET类型
+    字符串类型详细说明：     
+    1)char和varchar类型
+        char与varchar很类似，都用来保存MySQL中较短字符串。
+        区别：char列的长度固定位创建表时声明的长度，长度可以为0~255的任何值；
+                     varchar列中的值为可变长字符串，长度可以指定为0~65535（MySQL5.0.3版本以前为0~255）之间的值。
+                     在检索时，char列删除尾部的空格，而varchar则保留这些空格。
+        create table t1(v varchar(4),c char(4));
+        insert into t1 values('ab  ','ab  ');
+        select length(v),length(c) from t1;
+        select concat(v,'+'),concat(c,'+') from vc;
+        选择：由于char是固定长度，所以它的处理速度比varchar快，但是缺点是浪费存储空间。所以对于那些长度变化不大的数据可以选择此列
+    2)text类型
+        保存少量字符串的时候，我们会选择char或者varchar，保存大文本的时候通常会选择使用text。
+    3)blob类型
+        blob类型也是用来保存比较大量的字符串的名单是blob类型是用来保存二进制数据的比如照片。
+    2)ENUM类型
+        枚举类型，它的值范围需要在创建表时通过枚举方式显式指定，对1~255个成员的枚举需要1个字节存储；对于255~65535个成员，需要2个
+        字节存储。最多有65535个成员。
+        create table t1(flag enum('a','b','c','d'));
+        insert into t1 values('a'),('a'),('f');
+        往enum类型里存储数据是忽略大小写的，对于插入不在enum指定范围内的值时，并没有返回警告，而是插入了enum的第一个值。
+        另外enum类型只允许从值集合中选取单个值，而不能一次取多个值
+    3)SET类型
+        set和enum类型非常类似，也是一个字符串对象，里面可以包含0~64个成员。根据成员的不同，存储上也有所不同。
+        1~8成员的集合，占1个字节
+        9~16成员的集合，占2个字节
+        17~24成员的集合，占3个字节
+        25~32成员的集合，占4个字节
+        33~64成员的集合，占8个字节
+        create table t1(flag set('a','b','c','d'));
+        insert into t1 values('a,b'),('a,d,a');
+        SET类型可以从允许值集合中选择任意1个或多元素进行组合，所以对于输出的值只要在允许的组合范围内，都可以正确地注入到set类型的
+        列中。
+        对于超出允许值范围的值，将不允许注入，对于包含重复的成员的集合将只取一次进行注入。
+        使用FIND_IN_SET函数对set类型的数据进行查询是比较好的选择!
+
+
+三、（My）SQL使用入门
+	 1.SQL语言简介
+	   当面对一个陌生的数据库时，通常需要一种方式与它进行交互，以完成用户所
+	   需要的各种工作，这时候就需要使用SQL语言了。SQL（Structured Query 
+	   Language）结构化查询语言,最早是由IBM在20世纪70年代开发出来，为的是IBM
+	   的关系数据库管理系统SYSTEM R开发的一种查询语言。SQL结构简洁，功能强大
+	   ，简单易学，所以自从其出现，SQL得到了广泛的应用。20世纪80年代初，美国
+	   国家标准局（ANSI）开始着手定制SQL标准，当前的SQL标准已经几经修改，更
+	   趋完善！正是由于SQL语言的标准化，所以大多数关系型数据库系统都支持SQL
+	   语言，它已经发展成为多种平台进行交互操作的底层会话语言前面加My为的是
+	   在介绍标准SQL的同时，也将一些MySQL在标准SQL上的扩展一同介绍！
+	 2.SQL分类
+	   1)DDL(Data Definition Languages)语句
+	     数据定义语句，通过这类语言可以对数据库进行创建删除更改
+	   2)DML(Data Manipulation Language)语句
+	     数据操纵语句，用于添加、删除、更新和查询数据库记录并检查数据完整性
+	   3)DCL(Data Control Language)语句
+	     数据控制语句，通过此类语句可以对数据库的相关权限进行设置
+	 3.DDL语句
+	   对数据库内部的对象进行创建、删除、修改等操作的语言,DDL语句更多的是由
+	   数据库管理员(DBA)使用，开发人员一般很少使用
+	   详见下面的详细说明
+	 4.DML语句
+	   DML操作是指对数据库中表记录的操作，主要包括表记录的插入、更新、删除、
+	   和查询，是开发人员日常使用最频繁的操作。
+	   详见下面的详细说明
+	 5.DCL语句
+	   DCL语句主要是DBA用来管理系统中的对象权限时使用的，一般开发人员很少使
+	   用。关于权限设置的更多内容我们在以后再做详细讲解！
+	   
+	   
+	   
+储备知识：
+         1.首先需要登录MySQL
+             mysql -u 用户名 -p 敲回车键 然后输入密码即可！
+          2.命令结束符用“;”或“\g”
+          3.客户端的连接ID,这个数字记录了MySQL服务到目前为止的连接次数；每个新连接都会自动加1    
+三.DDL语句
+      对数据库内部的对象进行创建、删除、修改等操作的语言DDL语句更多的是由数据库管理员(DBA)使用，开发人员一般
+      很少使用
+       1.创建数据库
+           1>create database 数据库名;
+           2>选择要操作的数据库：USE 数据库;
+           3>查看数据库中所有的数据表show tables;
+       2.删除数据库
+           drop database 数据库名称;
+       3.创建表
+           1)创建表
+               create table 表名(
+	字段1名 字段1类型  列的约束条件,
+	字段2名 字段2类型  列的约束条件,
+	...
+                )
+               列的约束条件部分可以设置很多信息比如，默认值设置：default null
+           2)创建完表之后可以查看表的定义
+               desc 表名;
+           3)查看创建表的SQL语句
+               show create table 表名 \G
+               \G选项使得记录能够按照字段竖向排列，以便更好地显示内容较长的记录，\G后面无需再加分号
+       4.删除表
+           drop table 表名;
+       5.修改表
+           1)修改表的字段类型
+               alter table 表名 modify [column] 字段定义  [first|after 字段名];
+           2)增加表字段
+               alter table 表名 add [column] 字段定义 [first|after 字段名];
+           3)删除表字段
+               alter table 表名 drop [column]  字段名;
+           4)字段改名
+               alter table 表名 change [column] 旧的字段名 字段定义 [first|after 字段名];
+           注：change与modify都可以修改表的定义，不同的是change后面需要接两次列名，不方便，但是优点是change可以修
+           改字段名称
+           5)修改字段排列排序
+               前面介绍的字段增加和修改语法(add/change/modify)中，都有一个可选项first|after 字段名,这个选择可以用来修改
+               字段在表中的位置新增的字段默认是加载在表中最后位置，而change/modify 默认都不会改变字段的位置
+           注意：change/first|after 字段名 这些关键字都是属于MySQL在标准SQL上的扩展，在其他的数据库上不一定适用
+           6)更改表名
+               alter table 表名 rename [to] 新的表名;
+四.DML语句
+     1.插入记录
+         1)插入记录
+             insert into 表名(字段1,字段2,字段3,...,字段n)  values(值1,值2,值3,...,值n);
+             也可以不用指定字段名，但是values后面的顺序应该和字段的排序一致
+         2)一次插入多条记录
+             insert into 表名(字段1,字段2,字段3,...,字段n)
+             values
+             (值1,值2,值3,...,值n),
+             (值1,值2,值3,...,值n),
+             (值1,值2,值3,...,值n)
+             ;
+     2.更新记录
+         1)更新一个表
+            update 表名 set 字段1=值1,字段2=值2,...字段n=值n [where 条件];
+         2)更新多个表中数据
+            update 表1,表2,...表n set 表1.字段1=表达式1,表n.字段n=表达式n [where 条件];
+            注：多表更新更多的用在根据一个表的字段来动态的更新另外一个表的字段
+     3.删除记录
+        1)删除单表中的数据  
+            delete from 表名 [where 条件];
+        2)删除多个表中的数据
+             delete 表1,表2,...表n from 表1,表2,...表n [where 条件];
+             不管是单表还是多表，不加where条件将会把表中的所有记录删除，所以操作时一定要小心。
+     4.查询记录
+        SELECT * FROM 表名 WHERE 条件;
+        1)查询不重复的记录
+            SELECT distinct field1,field2 FROM 表名;
+            只要field1,field2任何一个字段有不同就会被选择！
+            一般使用distinct,只筛选一个字段!
+        2)条件查询	
+            注：条件字段比较符号：
+            =,<,>,>=,<=,!=等比较运算符
+            多个条件之间可以使用or and等
+        3)排序和限制
+            SELECT * FROM 表名 WHERE 条件 ORDER BY field1 [DESC|ASC],field2 [DESC|ASC],...fieldn [DESC|ASC];
+            如果排序字段的值一样，则值相同的字段按照第二个排序字段进行排序，依次类推。如果只有一个排序字段，则这
+            些字段相同的记录都将无序排列！
+            举例：
+            select * from emp order by deptno,sal desc;
+            对于排序后的数据如果只希望显示一部分，则可以使用 LIMIT start,row 来限制
+        4)聚合
+            很多情况下，用户都需要进行一些汇总操作，这是就需要使用到SQL聚合操作
+            SELECT [field1,field2,...fieldn] fun_name FROM 表名 [WHERE 条件] [GROUP BY field1,field2,...fieldn [WITH ROLLUP]] 
+            [HAVING 条件];
+            fun_name：聚合操作,聚合函数常用：
+            sum：求和
+            count(*)：记录总数
+            max：最大值
+            min：最小值
+            GROUP BY 关键字表示要进行分类聚合(上面的这些函数)的字段、比如按部门分类统计员工数量，部门就应该写在
+                                 GROUP BY后面。
+            WITH ROLLUP 是可选语法，表明是否对分类聚合后的结果进行再汇总！ 
+            HAVING 关键字表示对分类后的结果再进行条件的过滤！
+            注意：having和where的区别在于，having是对聚合后的结果进行条件过滤，而where是在聚合前就对记录进行过滤
+                          ，应该尽可能的对记录进行先过滤！
+            ①直接统计：
+                  格式：select count([列名|*]) from 表名;
+                 举例：select count(*) from a1;//统计表a1中的所有记录
+            ②按某字段进行数据统计：
+                 格式：select field1,count([列名|*]) from 表名 group by field1;
+                 举例：select name,count(*) from a1 group by name;//对表a1中的记录按name字段的值进行分组，并且对每个分组
+                               进行数量统计
+            ③按某字段进行数据统计,并且统计总数：
+                 格式：select field1,count([列名|*]) from 表名 group by field1 with rollup;
+                 举例：select name,count(*) from a1 group by name with rollup;
+            ④对统计后的数据进行再筛选
+                 格式：select field1,count([列名|*]) from 表名 group by field1 having count([列名|*])>数值;
+                 举例：select name,count(*) from a1 group by name having count(*)>4;
+            ⑤统计总和和最高最低以及总记录数：
+                 格式：select sum(field1),max(field1),min(field1),count([列名|*]) from 表名;
+                 举例：select sum(id),max(id),min(id),count(*) from a1;
+        5)表连接
+            需求：显示多个表中的字段的时候即可使用表连接
+            连接分类
+	内连接：选取两张表中相互匹配的记录
+	外连接：不仅仅选取两张相互匹配的记录，并且会选出其他不匹配的记录
+            举例：
+	内连接
+	              1)查询所有雇员的名字和所在部门名称
+                                         名字存放在表emp表
+                                         部门存放在表dept表中
+                                         select ename,deptname from emp,dept where emp.deptno=dept.deptno;
+	外连接
+	              1)左连接
+                                         概念：包含左边表中的所有记录(包括右表中没有和它匹配的记录)
+                                         select ename,deptname from emp left join dept on emp.deptno=dept.deptno;
+	              2)右连接
+                                         概念：包含右边表中的所有记录(包括左表中没有和它匹配的记录)
+        6)子查询
+            需求：一个查询需要另外一个查询的结果参与的时候
+                         用于子查询的关键字:
+                          in、not in、=、!=、exists、not exits等
+	  1)select * from emp where deptno in(select deptno from dept);
+	  2)若查询结果唯一可以使用=代理in
+	      select * from emp where deptno=(select deptno from dept limit 1);
+        7)记录联合
+             我们常常会碰到需要将两个表或者多个表的数据按照一定的查询条件查询出来后，将结果合并到一起显示这是就需
+            要用到记录联合
+            	多个select 语句用 
+	UNION或者UNION ALL隔开即可实现
+	区别： 前者 会将多个查询结果合并后并且进行去除重复后返回
+	               后者 则直接合并并不去除重复
+
+四、MySQL中的常见运算符
+	 运算符可以用在连接表达式
+	 1.算数运算符
+	 2.比较运算符
+	 3.逻辑运算符
+	 4.运算符的优先级
+
+1.算数运算符
+  运算符		作用
+  +		加法
+  -		减法
+  *		乘法
+  /,DIV		除法，返回商
+  %,MOD		除法
+2.比较运算符
+  运算符		作用
+  =		等于
+  <>或!=		不等于
+  <=>		NULL安全的等于
+  <		小于
+  <=		小于等于
+  >		大于
+  >=		大于等于
+  BETWEEN		存在指定范围
+  IN		存在于指定集合
+  IS NULL		为NULL
+  IS NOT NULL	不为NULL
+  LIKE		通配符匹配
+  REGEXP或RLIKE	正则表达式匹配
+3.逻辑运算符
+  逻辑运算符又称为布尔运算符，用来确认表达式的真和假
+  运算符		作用
+  NOT或!		逻辑非
+  AND或&&		逻辑与
+  OR或||		逻辑或
+  XOR		逻辑异或
+4.运算符的优先级
+  在实际运行的时候，实际上很少有人能够将运算符的优先级熟练记忆
+  很多情况下我们都是用“()”来将需要优先的操作括起来，这样既起到了优先的作用，又使得其他用户看起来更易于理
+  解
+
+
+五、常用函数
+	 经常编写程序的朋友一定体会得到函数的重要性，丰富的函数往往能使用户的工
+	 作事半功倍。函数能帮用户做很多事情，比如说字符串的处理、数值的运算、日
+	 期的运算等等，在这方面MySQL提供了多种内建函数帮助开发人员编写简单快捷的
+	 SQL语句，其中常用的函数有字符串函数、日期函数、数值函数。
+	 在MySQL数据库中，函数可以用在SELECT语句以及其子句（例如WHERE、ORDER BY
+	 、HAVING等）中，也可用在UPDATE、DELETE语句及其子句中。
+	 1.字符串函数
+	 2.数值函数
+	 3.日期和时间函数
+	 4.流程函数
+	 5.其他常用函数
+
+1.字符串函数
+  函数			功能
+  CONCAT(S1,S2,...Sn)	连接S1,S2,...Sn为一个字符串
+  INSERT(str,x,y,instr)	将字符串str从第x位置开始，y个字符长的字符串换位字符串instr
+  LOWER(str)		将字符串str中所有字符变为小写
+  UPPER(str)		将字符串str中所有字符变为大写
+  LEFT(str,x)		返回字符串str最右边的x个字符
+  RIGHT(str,x)		返回字符串str最右边的x个字符
+  LPAD(str,n,pad)		用字符串pad对str最左边进行填充，直到长度为n个字符长度
+  RPAD(str,n,pad)		用字符串pad对str最右边进行填充，直到长度为n个字符长度
+  LTRIM(str)		去掉字符串str左侧的空格
+  RTRIM(str)		去掉字符串str行尾的空格
+  REPEAT(str,x)		返回str重复x次的结果
+  REPLACE(str,a,b)		用字符串b替换字符串str中所有出现的字符串a
+  STRCMP(s1,s2)		比较字符串s1和s2
+  TRIM(str)		去掉字符串行尾和行头的空格
+  SUBSTRING(str,x,y)		返回从字符串str x位置起y个字符长度的字符串
+  LENGTH(str)		返回字符串长度
+2.数值函数
+  函数			功能
+  ABS(x)			返回x的绝对值
+  CEIL(x)			返回大于x的最小整数值
+  FLOOR(x)			返回小于x的最大整数值
+  MOD(x,y)			返回x/y的模
+  RAND()			返回0-1内的随机值
+  ROUND(x,y)		返回参数x的四舍五入的有y位小数的值
+  TRUNCATE(x,y)		返回数字x截断为y位小数的结果			
+3.日期和时间函数
+  函数			功能
+  CURDATE()		返回当前日期
+  CURTIME()		返回当前时间
+  NOW()			返回当前的日期和时间
+  UNIX_TIMESTAMP(date)	返回日期date的UNIX时间戳
+  FROM_UNIXTIME()		返回UNIX时间戳的日期值
+  WEEK(date)		返回日期date为一年中的第几周
+  YEAR(date)		返回日期date的年份
+  HOUR(time)		返回time的小时值
+  MINUTE(time)		返回time的分钟值
+  MONTHNAME(date)		返回date的月份名
+  DATE_FORMAT(date,fmt)	返回按字符串fmt格式化日期date值
+  DATE_ADD(add,INTERVAL expr type) 返回一个日期或时间值加上一个时间间隔的时间值
+  DATEDIFF(expr,expr2)	返回起始时间expr和结束时间expr2之间的天数		
+4.流程函数
+  函数			功能
+  IF(value,t,f)		如果value是真，返回t,否则返回f
+  IFNULL(value1,value2)	如果value1不为空，返回value1，否则返回default
+  CASE WHEN [value1] THEN [result1]...ELSE[default]END	如果value1是真，返回result1，否则返回default
+  CASE [expr] WHEN [value1] THEN[result1]...ELSE[default]END  如果expr等于value1，返回result1，否则返回
+						default	
+5.其他常用函数
+  函数			功能
+  DATABASE()		返回当前数据库名
+  VERSION()		返回当前数据库版本
+  USER()			返回当前登录用户名
+  INET_ATON(IP)		返回IP地址的数字表示
+  INET_ATON(num)		返回数字代表的IP地址
+  PASSWORD(str)		返回字符串str的加密版本
+  MD5()			返回字符串str的MD5值
+
+
+六、图形化工具(phpMyAdmin)的使用
+	 phpMyAdmin是一个用PHP编写的、可以通过web控制和操作MySQL数据库的工具。其
+	 最突出的特点是可以直接从web上去管理MySQL，不需要直接再MySQL数据库服务器
+	 上进行维护。因其功能全面、使用方便成为众多MySQL数据库管理员维护数据库的
+	 首选功能。phpMyAdmin的功能非常全面，包括数据库管理、数据对象管理、用户
+	 管理、数据导入导出、数据库管理、数据管理等。
+	 1.数据库管理
+	 2.数据库对象管理
+	 3.权限管理
+	 4.导入导出数据
+
+
+
 
