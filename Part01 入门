@@ -51,8 +51,8 @@ values
 update t1 set age=50; 这样会把所有的age都变成50
 update t1 set age=50 where id=1; 这样只把id=1的age变成50；
 update t1 set age=30 where id=1 and age=50; 多条件查询更新
-
-
+update t1,t2 set t1.age=25, t2.age=65 where t1.id=2 and t2.id=3; 更新多个表中的记录，这里可以写成t2.id=t1.id
+delete from t2 where id=1;  删除指定行； 这里的条件也可以写 where id>=3;
 
 
 
