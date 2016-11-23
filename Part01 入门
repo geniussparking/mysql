@@ -5,7 +5,7 @@
 输入mysql -uroot -p 回车，进入默认数据库
 或者直接在wampserver图标点左键，找到mysql控制台，输入密码就可以了
 
-命令：
+DDL语句命令：
 show databases; -->显示目前mysql系统里面有多少个数据库；
 create database test01; -->创建一个名字叫test01的数据库;
 drop database test01; -->删除数据库;
