@@ -87,30 +87,18 @@ select * from employee e, employee_record er where e.id=er.id; 也可以给表�
 左连接：select * from employee left join employee_record on employee.id=employee_record.id; 概念：包含左边表中的所有记录
 右连接：select * from employee right join employee_record on employee.id=employee_record.id; 概念：包含右边表中的所有记录,如果右边的记录比左边少，则省略掉，如果右边比左边多，则是null
 左连接和右连接可以互换位置，所谓的左和右就是先写谁，谁在左边。
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+子查询： in，in后面的子语句必须只返回一个字段。
+假设创建了一个employee_late的表，里面记录了迟到的员工id及迟到原因，现在要查询哪些员工迟到了，要在employee表中查询迟到员工的信息
+select * from employee where id in(select distinct eid from employee_late);
+select eid, count(eid) from employee_late group by eid having count(eid)>1;
+select * from employee where id in (select eid from employee_late group by eid having count(eid)>1);
+exists：后面那个子语句有没有查询出记录来，如果查询出记录来返回true,否则就是false,并且查询出来的记录的具体的值是NULL也是没有关系,也是返回true.
+select * from employee where exists(select * from employee_late where employee_late.eid=employee.id); 查询到所有迟到过的员工
+union联接：
+区别： UNION 会将多个查询结果合并后并且进行去除重复后返回
+      UNION ALL 则直接合并并不去除重复
+联合的条件：查询的列个数要相等 --> select id, name, salary from employee union select * from employee_late;  因为table employee_late只有三列
+如果用union只取一个字段，比如id，会自动去重复，这时候需要用union all;
 
 
 
