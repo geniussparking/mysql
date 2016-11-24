@@ -86,7 +86,7 @@ select * from employee e, employee_record er where e.id=er.id; 也可以给表�
 外连接：不仅仅选取两张相互匹配的记录，并且会选出其他不匹配的记录
 左连接：select * from employee left join employee_record on employee.id=employee_record.id; 概念：包含左边表中的所有记录
 右连接：select * from employee right join employee_record on employee.id=employee_record.id; 概念：包含右边表中的所有记录,如果右边的记录比左边少，则省略掉，如果右边比左边多，则是null
-
+左连接和右连接可以互换位置，所谓的左和右就是先写谁，谁在左边。
 
 
 
