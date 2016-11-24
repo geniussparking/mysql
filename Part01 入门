@@ -75,7 +75,29 @@ select department, sum(salary) from employee group by department; 分类汇总�
 select sum(salary) from employee group by department with rollup; 按照部门汇总后，在计算总数；
 select department, sum(salary) from employee group by department having sum(salary)>1000; 分类汇总，但后列出部门工资在1000以上的；
 这里不能用where条件，where是在聚合之前过滤，having是在聚合之后过滤。having的用途在于对聚合后的结果进行过滤
-select min(salary), max(salary), avg(salary), sum(salary), count(*) from employee;
+select min(salary), max(salary), avg(salary), sum(salary), count(*) from employee;  在一起使用，可以查询多个计算后的结果
+select employee.id, employee.name, employee.salary, employee_record.record from employee, employee_record where employee.id=employee_record.eid; 内连接：从两张表中查询数据，employee_record是新建的表，里面有员工的record信息
+内连接：选取两张表中相互匹配的记录
+select * from employee, employee_record where employee.id=employee_record.eid; 内连接，查询全部字段信息
+alter table employee_record eid id int;  将employee_record的eid改成字段id，这时候两张表有相同的字段
+select * from employee, employee_record where employee.id=employee_record.id; 这时候能查询出来，但是两张表有相同的id字段，这时候就需要给字段起别名
+select employee.id a, employee_record.id b, employee.name, employee.salary, employee_record.record from employee, employee_record where employee.id=employee_record.id; 这样将两个表中的id分别命名为a和b,在php中，存入数组的时候，数组索引值就不会重复，这样就不会报错
+select * from employee e, employee_record er where e.id=er.id; 也可以给表取别名，起别名的方式就是在查询的时候，将别名放在字段/表明后面
+外连接：不仅仅选取两张相互匹配的记录，并且会选出其他不匹配的记录
+左连接：select * from employee left join employee_record on employee.id=employee_record.id; 概念：包含左边表中的所有记录
+右连接：select * from employee right join employee_record on employee.id=employee_record.id; 概念：包含右边表中的所有记录,如果右边的记录比左边少，则省略掉，如果右边比左边多，则是null
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -219,6 +241,23 @@ select min(salary), max(salary), avg(salary), sum(salary), count(*) from employe
                           ，应该尽可能的对记录进行先过滤！
 					select sum(salary) from employee group by department having sum(salary)>1000;
 				在一起使用：select sum(id),max(id),min(id),count(*) from a1;
+			5>表连接
+				需求：显示多个表中的字段的时候即可使用表连接
+				连接分类
+					内连接：选取两张表中相互匹配的记录
+					外连接：不仅仅选取两张相互匹配的记录，并且会选出其他不匹配的记录	
+				举例：
+					内连接：select 表.字段,....  from 表1名,表2名,...  where [匹配的条件比如 表1.字段=表2.字段];
+							select 语句可以给字段起别名!直接写在需要查询显示的字段的后面就ok
+									给表起别名
+					外连接
+					  1)左连接
+							概念：包含左边表中的所有记录(包括右表中没有和它匹配的记录)
+									select ename,deptname from emp left join dept on emp.deptno=dept.deptno;
+					  2)右连接
+							概念：包含右边表中的所有记录(包括左表中没有和它匹配的记录)
+						左连接和右连接是可以相互转换的！
+	
 
 
 PPT部分：
