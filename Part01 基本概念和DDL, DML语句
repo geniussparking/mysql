@@ -257,6 +257,32 @@ select * from employee e, employee_record er where e.id=er.id; 也可以给表�
 					  2)右连接
 							概念：包含右边表中的所有记录(包括左表中没有和它匹配的记录)
 						左连接和右连接是可以相互转换的！
+			6>子查询
+				需求：一个查询需要另外一个查询的结果参与的时候
+					用于子查询的关键字:
+                          in
+							语法：select * from employee where id in(select eid from employee_late);
+							in 在..里面	
+							注意点 in后面的子语句必须只返回一个字段
+							若查询结果唯一(只有一条)可以使用=代替in
+						  not in
+							与in相反
+						  exists
+							语法：select语句 where exists(select 语句);
+							exists：后面那个子语句有没有查询出记录来，如果查询出记录来返回true,否则就是false
+									并且查询出来的记录的具体的值是NULL也是没有关系,也是返回true.
+						  not exits
+							与exists相反
+					  1)select * from emp where deptno in(select deptno from dept);
+					  2)若查询结果唯一可以使用=代替in
+						  select * from emp where deptno=(select deptno from dept limit 1);
+			7>记录联合
+				我们常常会碰到需要将两个表或者多个表的数据按照一定的查询条件查询出来后，将结果合并到一起显示这是就需要用到记录联合
+				多个select 语句用
+				UNION或者UNION ALL隔开即可实现
+				区别： 前者 会将多个查询结果合并后并且进行去除重复后返回
+					   后者 则直接合并并不去除重复
+				联合的条件：查询的列个数要相等
 	
 
 
