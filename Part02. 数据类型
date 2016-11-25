@@ -50,7 +50,11 @@ PPT部分：
 				primary key(字段)
 				primary key(字段1,字段2)
 				也可以直接写在需要创建主键的字段后面
-				
+				create table t6(id int primary key, name int); 设置id为主键
+				create table t6(id int, name int, primary key(id));或者可以这样设置
+				create table t4(id int auto_increment, name int, primary key(id)); 配合auto_increment设置主键；
+				insert into t4(name) values(111);
+				insert into t4(name) values(222); 只需要插入name，id字段会自动从1开始自增
 			如果忘了设置可以
 				alter table 表名 add primary key(字段名);
 		删除：
