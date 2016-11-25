@@ -55,12 +55,24 @@ PPT部分：
 				create table t4(id int auto_increment, name int, primary key(id)); 配合auto_increment设置主键；
 				insert into t4(name) values(111);
 				insert into t4(name) values(222); 只需要插入name，id字段会自动从1开始自增
+				insert into t4(id,name) values(100,222); 这里插入一条id是100的记录
+				insert into t4(name) values(555);  这时候会从101开始
+				select * from t4 where id=1; 然后这样查询记录是效率最高的，因为id是主键，系统自动创建了index
+				
+				create table t5(id int, name int);
+				alter table t5 add primary key(id);
+				alter table t5 modify id int auto_increment;  如果忘记添加主键和自增，用这个方式
+				
+				alter table t5 modify id int; 删除主键前要删除auto_increment;
+				alter table t5 drop primary key; 删除主键；
+				
 			如果忘了设置可以
 				alter table 表名 add primary key(字段名);
 		删除：
 			alter table 表名 drop primary key;
 			注意：如果字段具有auto_increment属性必须先删除auto_increment属性
 	4.规定字段的值是否可以为null	not null即不可以为null，该属性也可用于其他类型的字段
+		alter table t6 modify name int not null;
 	5.设置默认值	default 值，该属性也可用于其他类型的字段
 
 	
