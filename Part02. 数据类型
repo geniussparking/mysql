@@ -39,9 +39,17 @@ PPT部分：
 			+----------+------------+
 			1 row in set (0.00 sec)
 			field1被四舍五入了，因为只能保存7位小数位
-			②定点数
+			
+			 create table t5(field1 float(6,2));
+			 
+			②定点数，因为浮点数不精确（有四舍五入），定点数要更加精确
 				decimal(7,2)
-				
+			 create table t6(id int auto_increment primary key, price decimal);  
+			 desc t6; 可以查看，默认情况下，decimal位置的总共位数是10位，小数点后面是0位。超过10位将不能存入，小数点后面的数被四舍五入
+			 insert into t6(price) values(3333333123.712); 整数位有10位，小数位会被四舍五入，整数位超过10位，不能存入；
+			
+			 create table t7(id int auto_increment primary key, price decimal(7,2)); decimal总位数是7位，包含小数点位。 整数位不能超过7位，否则不能存入；小数位规定是2位，超过两位会四舍五入
+		
 整数类型的字段常见的属性设置：
 	1.UNSIGNED 无符号
 	2.auto_increment
