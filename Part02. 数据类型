@@ -74,7 +74,7 @@ PPT部分：
 	4.规定字段的值是否可以为null	not null即不可以为null，该属性也可用于其他类型的字段
 		alter table t6 modify name int not null;
 	5.设置默认值	default 值，该属性也可用于其他类型的字段
-
+		create table t2(id int auto_increment, name int default 1111, primary key(id));
 	
 1.数值类型
    整数类型	      字节	      范围(有符号)	      	      	        范围(无符号)
