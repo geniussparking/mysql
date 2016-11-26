@@ -154,12 +154,15 @@ PPT部分：
     insert into t1 values(now());
 3.字符串类型
     字符串类型				描述
-    CHAR(M)				M为0~255之间的整数,表示可以存M个字符
-    VARCHAR(M)			M为0~65535之间的整数,表示可以存M个字符
-    TINYTEXT				允许长度0~255字符
-    TEXT				允许长度0~65535字符
-    MEDIUMTEXT			允许长度0~167772150字符
-    LONGTEXT				允许长度0~42949667295字符
+    CHAR(M)				M为0~255之间的整数,表示可以存M个字符(不管是中文还是英文字符总共个数是M个就OK)
+    VARCHAR(M)	                        M为0~65535之间的整数,表示可以存M个字符,具体M最大多大和字符集有密切关系
+					注意varchar列的最大的存储空间是65,532字节,如果是英文字符集(一个英文字符占1个字节)就是可以放65532个英文字符
+					自己在实际开发的过程中M设置的值，应该从自己的实际需求去考虑，而不是最大能存多少个字符，因为超过最大能设定的字符数会自动报错或者警告！
+   TINYTEXT			        允许长度0~255字符
+   TEXT				        允许长度0~65535字符
+   MEDIUMTEXT			        允许长度0~16,777,215字符
+   LONGTEXT			        允许长度0~4,294,967,295字符
+
 
     BINARY(M)				允许长度0~M个字节的定长字节字符串(类似于CHAR类型，但保存二进制字节字符串而
 				        		                       不是非二进制字符串)
@@ -171,6 +174,31 @@ PPT部分：
 
     ENUM				枚举类型
     SET				SET类型
+    		
+******************************************************			
+实例：			
+     create table t2(name char(5));  只能存入5个字符的字符串，多于5位会被截断，且不能存入汉字
+    show create table t2\G
+    返回：
+    mysql> show create table t2 \G
+	*************************** 1. row ***************************
+	       Table: t2
+	Create Table: CREATE TABLE `t2` (
+	  `name` char(5) DEFAULT NULL
+	) ENGINE=MyISAM DEFAULT CHARSET=latin1    这里默认只能存入拉丁字母字符集
+	1 row in set (0.00 sec)
+	
+    insert into t2(name) values('帅哥！');  所以不能存入汉字
+    create table t3(name char(5)) default charset=utf8;    这样设置字符串的字符集就可以存入汉字。这里5个字符（不是字节的意思）是可以存入5个汉字，或者三个汉字，两个英文字母或两个数字，就是说，汉字和英文字母数字都是一样的，一个就表示占用一个字符
+    create table t4(name varchar(65532));  这里varchar可以存放65532个字节，并不是一定能存放65532个字符。英文数字能存65532个，但是汉字不行，所以最好按需设置字符串类型和字符个数
+    create table t5(name varchar(30000)) default charset=utf8;  这里是utf8能存入汉字，但是实际操作中，还是提醒30000太多了，最多只能21844个字符，65532/3=21844，一个utf8字符占3个字节。gbk是一个汉字占两个字节
+    
+    
+    
+    
+    
+    
+    
     
     
     字符串类型详细说明：     
