@@ -27,6 +27,18 @@ PPT部分：
 			①浮点数
 				单精度(float):单精度的浮点数精确到大约7位小数位(整数部分加上小数部分的位数)
 				双精度精度(double):双精度的浮点数精确到大约15位小数位(整数部分加上小数部分的位数)
+			create table t4(field1 float, field2,double);
+			insert into t4(field1,field2) values(12345678.9, 12345678.9);
+			select * from t4;
+			输出：
+			mysql> select * from t4;
+			+----------+------------+
+			| field1   | field2     |
+			+----------+------------+
+			| 12345700 | 12345678.9 |
+			+----------+------------+
+			1 row in set (0.00 sec)
+			field1被四舍五入了，因为只能保存7位小数位
 			②定点数
 				decimal(7,2)
 				
@@ -74,7 +86,11 @@ PPT部分：
 	4.规定字段的值是否可以为null	not null即不可以为null，该属性也可用于其他类型的字段
 		alter table t6 modify name int not null;
 	5.设置默认值	default 值，该属性也可用于其他类型的字段
-		create table t2(id int auto_increment, name int default 1111, primary key(id));
+		create table t2(id int auto_increment, name int not null default 1111, primary key(id));
+		create table t2(id int auto_increment primary key, name int not null default 1111);
+		insert into t2(name) values(null); 这时候是不行的，因为name不能为null
+		insert into t2 values(); 这时候如果直接插入，也能增加值，因为id自增，name有default值
+		
 	
 1.数值类型
    整数类型	      字节	      范围(有符号)	      	      	        范围(无符号)
