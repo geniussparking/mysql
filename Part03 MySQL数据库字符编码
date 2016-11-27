@@ -98,6 +98,8 @@ UTF-16在离开Unicode环境后，在传输和处理中都存在问题，于是U
 		
 		查看当前数据库的字符集和校对规则：
 			create database d5 default character set gbk; 建立数据库的时候最好就设置好数据库的字符集；
+			create database d6 default character set gbk default collate gbk_bin;  设置gbk字符集，校对规则设置为gbk_bin；
+			create database d7 default collate gbk_chinese_ci; 这里没有设置字符集，但是系统会自动使用gbk字符集
 			show variables like 'character_set_database'; 查看当前数据库的字符集
 			show variables like 'collation_database'; 查看当前数据库的校对规则
 	3.表字符集和校对规则设置
