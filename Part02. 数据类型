@@ -216,15 +216,7 @@ PPT部分：
     create table t3(name char(5)) default charset=utf8;    这样设置字符串的字符集就可以存入汉字。这里5个字符（不是字节的意思）是可以存入5个汉字，或者三个汉字，两个英文字母或两个数字，就是说，汉字和英文字母数字都是一样的，一个就表示占用一个字符
     create table t4(name varchar(65532));  这里varchar可以存放65532个字节，并不是一定能存放65532个字符。英文数字能存65532个，但是汉字不行，所以最好按需设置字符串类型和字符个数
     create table t5(name varchar(30000)) default charset=utf8;  这里是utf8能存入汉字，但是实际操作中，还是提醒30000太多了，最多只能21844个字符，65532/3=21844，一个utf8字符占3个字节。gbk是一个汉字占两个字节
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     字符串类型详细说明：     
     1)char和varchar类型
         char与varchar很类似，都用来保存MySQL中较短字符串。
