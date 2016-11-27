@@ -243,10 +243,15 @@ PPT部分：
     2)ENUM类型
         枚举类型，它的值范围需要在创建表时通过枚举方式显式指定，对1~255个成员的枚举需要1个字节存储；对于255~65535个成员，需要2个
         字节存储。最多有65535个成员。
-        create table t1(flag enum('a','b','c','d'));
+        create table t1(flag enum('a','b','c','d'));   插入值的时候只能是这四个中的
         insert into t1 values('a'),('a'),('f');
         往enum类型里存储数据是忽略大小写的，对于插入不在enum指定范围内的值时，并没有返回警告，而是插入了enum的第一个值。
         另外enum类型只允许从值集合中选取单个值，而不能一次取多个值
+	create table t9(sex enum('男','女')) default charset=utf8;   这样就可以插入汉字，且只能插入'男','女';
+	insert into t9(sex) values('男');
+	insert into t9(sex) values('女')；
+	create table t10(sex enum('man','woman'));
+	insert into t10(sex) values('man');
     3)SET类型
         set和enum类型非常类似，也是一个字符串对象，里面可以包含0~64个成员。根据成员的不同，存储上也有所不同。
         1~8成员的集合，占1个字节
@@ -256,6 +261,14 @@ PPT部分：
         33~64成员的集合，占8个字节
         create table t1(flag set('a','b','c','d'));
         insert into t1 values('a,b'),('a,d,a');
+------------------------------------------------------------
+	create table t11(sex set('man','woman'));
+	insert into t11(sex) values('man');
+	insert into t11(sex) values('woman');
+	insert into t11(sex) values('woman,man'); 可以存进去一组数据
+	insert into t11(sex) values('man,woman'); 这里man和woman的顺序无所谓，存进去之后顺序都是之前指定的顺序man woman
+	select * from t11 where sex='man';  这样只能查询精确匹配‘man’的记录；
+	select * from t11 where find_in_sex('man',sex); 这样能查询只要包含'man'的，就能查询出来，包括有'man,woman'的；
         SET类型可以从允许值集合中选择任意1个或多元素进行组合，所以对于输出的值只要在允许的组合范围内，都可以正确地注入到set类型的
         列中。
         对于超出允许值范围的值，将不允许注入，对于包含重复的成员的集合将只取一次进行注入。
