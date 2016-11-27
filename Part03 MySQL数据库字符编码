@@ -97,8 +97,9 @@ UTF-16在离开Unicode环境后，在传输和处理中都存在问题，于是U
 		[[DEFAULT] COLLATE collation_name]
 		
 		查看当前数据库的字符集和校对规则：
-			show variables like 'character_set_database';
-			show variables like 'collation_database';
+			create database d5 default character set gbk; 建立数据库的时候最好就设置好数据库的字符集；
+			show variables like 'character_set_database'; 查看当前数据库的字符集
+			show variables like 'collation_database'; 查看当前数据库的校对规则
 	3.表字符集和校对规则设置
 		表的字符集和校对规则在创建表的时候指定，也可以通过alter table 命令进行修改，同样的是如果表中已经有数据那么修改字符集对原来的记录并没有影响，不会按照新的字符集进行存放！
 		设置表字符集的规则如下：
