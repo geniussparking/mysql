@@ -111,7 +111,14 @@ UTF-16在离开Unicode环境后，在传输和处理中都存在问题，于是U
 		4)如果没有指定字符集和校对规则，则使用数据库字符集和校对字符集和校对规则作为表的字符集和校对规则
 		CREATE TABLE tbl_name (column_list)
 		[DEFAULT CHARACTER SET charset_name [COLLATE collation_name]]
- 
+		*************************************************************
+ 		create database d8;
+		show variables like 'character_set_database';
+		create table t1(id int, name char(5)) default character set gbk;  创建字符编码是gbk的表
+		show create table t1\G   这时候就可以看到表的字符编码是gbk了
+		create table t2(id int, name char(5)) default character set gbk default collate gbk_bin;  设置好的字符编码和校对规则
+		show create table t2\G   这时候能查看设置好的字符编码和校对规则
+		*************************************************************
 		ALTER TABLE tbl_name
 		[DEFAULT CHARACTER SET charset_name] [COLLATE collation_name]
 	4.字段(列)字符集和校对规则
