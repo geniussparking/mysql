@@ -124,6 +124,8 @@ UTF-16在离开Unicode环境后，在传输和处理中都存在问题，于是U
 	4.字段(列)字符集和校对规则
 		遇到这种情况概率比较小，这只是MySQL提供给我们一个灵活设置的手段
 七、MySQL连接字符集设置
+	
+过程中要设置正确，诚实守信，这样子如果全部设置正常，服务器端会自动的去按照你设置的字符集转换,但是也要避免想换转换的过程，最好都设置成一样的编码！
 	连接字符集设置：客户端和服务器之间交互的字符集
 	1.对于客户端和服务器段的交互操作，MySQL提供了3个不同的参数：
 		1)character_set_client：客户端来源数据使用的字符集
@@ -144,6 +146,25 @@ UTF-16在离开Unicode环境后，在传输和处理中都存在问题，于是U
 			create table t1(id int, name char(5));
 			insert into t1(id, name) values(1,'帅哥');  这时候插入汉字没有问题	
 			set character_set_client=utf8; 可以给客户端单独改字符编码
+			insert into t1 values(4,'美女'); 这时候插入汉字就会出现问题，显示？？？
+			set names gbk； 1)character_set_client：客户端来源数据使用的字符集
+					2)character_set_connection：连接层字符集
+					3)character_set_results：返回结果字符集
+			相当于一次把三个参数都设置成了gbk, 用show variables like 'charcater_set%';查看
+			mysql> show variables like 'character_set%';
+			+--------------------------+-------------------------------------------------+
+			| Variable_name            | Value                                           |
+			+--------------------------+-------------------------------------------------+
+			| character_set_client     | gbk           客户端                            |
+			| character_set_connection | gbk           连接层                            |
+			| character_set_database   | gbk           数据库                            |
+			| character_set_filesystem | binary                                          |
+			| character_set_results    | gbk           结果界面                           |
+			| character_set_server     | latin1                                          |
+			| character_set_system     | utf8                                            |
+			| character_sets_dir       | e:\wamp64\bin\mysql\mysql5.7.14\share\charsets\ |
+			+--------------------------+-------------------------------------------------+
+			8 rows in set (0.01 sec)
 			
 			*******************************************
 		这3个参数设定的字符集应该相同，并且客户端使用的字符集确实是参数character_set_client的值，才可以确保用户的数据可以正确的返回且输出。
@@ -153,6 +174,37 @@ UTF-16在离开Unicode环境后，在传输和处理中都存在问题，于是U
 			也可以在配置文件中设置：
 				[mysql]
 				default-character-set=字符集
-		修改CMD命令行字符集：
+		修改CMD命令行字符集：(在CMD界面)
 			chcp 65001   #换成utf-8代码页（设置为utf-8之后最好手动修改显示字体 ）
 			chcp 936     #换成默认的gbk
+			
+		如何使用utf—8编码：
+		win+R,cmd打开dos命令界面
+		输入chcp 65001，切换成utf-8
+		然后输入：
+		cd /d E:\wamp64\bin\mysql\mysql5.7.14\bin   切换到bin目录
+		myqsl -uroot -p
+		输入密码，ok   ---> 从CMD切换到本地mysql控制台
+		
+		create database d10 default character set utf8;
+		use d10
+		show variables like 'character_set%';
+		+--------------------------+-------------------------------------------------+
+		| Variable_name            | Value                                           |
+		+--------------------------+-------------------------------------------------+
+		| character_set_client     | utf8         这里都是uft-8                       |
+		| character_set_connection | utf8                                            |
+		| character_set_database   | utf8                                            |
+		| character_set_filesystem | binary                                          |
+		| character_set_results    | utf8                                            |
+		| character_set_server     | latin1                                          |
+		| character_set_system     | utf8                                            |
+		| character_sets_dir       | e:\wamp64\bin\mysql\mysql5.7.14\share\charsets\ |
+		+--------------------------+-------------------------------------------------+
+		8 rows in set (0.01 sec)
+		所以只要客户端是utf-8，后面的会自动变成utf-8;
+		
+		客户端使用字符，连接层使用的字符集，内部使用的字符集，返回使用的字符集，最好都设置层一样的，并且客户端使用的字符集确实是character_set_client参数的值，这样就绝对不会出现问题！
+
+
+
