@@ -117,7 +117,7 @@ UTF-16在离开Unicode环境后，在传输和处理中都存在问题，于是U
 		create table t1(id int, name char(5)) default character set gbk;  创建字符编码是gbk的表
 		show create table t1\G   这时候就可以看到表的字符编码是gbk了
 		create table t2(id int, name char(5)) default character set gbk default collate gbk_bin;  设置好的字符编码和校对规则
-		show create table t2\G   这时候能查看设置好的字符编码和校对规则
+		show create table t2\G   这时候能查看设置好的字符编码和校对规则  
 		*************************************************************
 		ALTER TABLE tbl_name
 		[DEFAULT CHARACTER SET charset_name] [COLLATE collation_name]
@@ -137,6 +137,15 @@ UTF-16在离开Unicode环境后，在传输和处理中都存在问题，于是U
 				3>若上述值不存在，则使用对应数据库设定的字符集； 
 				4>若上述值不存在，则使用服务器设定的字符集。 
 			3) 将操作结果从内部操作字符集转换为character_set_results。 
+			*****************************************
+			create database d9 default character set gbk;
+			use d9;
+			show variables like 'character_set%';  可以查看客户端/连接层/数据库的字符编码			
+			create table t1(id int, name char(5));
+			insert into t1(id, name) values(1,'帅哥');  这时候插入汉字没有问题	
+			set character_set_client=utf8; 可以给客户端单独改字符编码
+			
+			*******************************************
 		这3个参数设定的字符集应该相同，并且客户端使用的字符集确实是参数character_set_client的值，才可以确保用户的数据可以正确的返回且输出。
 		查看当前设置：show variables like 'character_set%';
 		修改：
