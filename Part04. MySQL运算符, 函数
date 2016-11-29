@@ -7,33 +7,33 @@
 
 1.算数运算符
   运算符		作用
-  +		加法
+  +		加法  select 1; select 1+1;...
   -		减法
   *		乘法
-  /,DIV		除法，返回商
-  %,MOD		取余数
+  /,DIV		除法，返回商 select 10/2;  
+  %,MOD		取余数  select 10 mod 3;
 2.比较运算符
-  运算符		作用
-  =		等于
-  <>或!=		不等于
-  <=>		可以用于null值的比较
+  运算符	      作用
+  =		等于      select 1=1; 返回1; select null=null; 返回null; 用select null<=>null; 返回1；
+  <>或!=	       不等于
+  <=>		可以用于null值的比较   select null <=> null;  return ture-->用于Null值的比较
   <		小于
   <=		小于等于
   >		大于
   >=		大于等于
-  BETWEEN		存在指定范围
-  IN		存在于指定集合
-  IS NULL		为NULL
-  IS NOT NULL	不为NULL
-  LIKE		通配符匹配
-  REGEXP或RLIKE	正则表达式匹配
+  BETWEEN	存在指定范围    select 2 between 10 and 100; 返回0;  select * from t1 where id between 10 and 100;
+  IN		存在于指定集合   select * from t1 where id in(select eid from t2);  select 2 in(2,5,8,10); 返回0
+  IS NULL	为NULL          select 1 is null; 返回0    select null is null;  返回1；
+  IS NOT NULL	不为NULL          
+  LIKE		通配符匹配       select 'abcdef' like '%d%';  返回1
+  REGEXP或RLIKE	正则表达式匹配   select 'abcdef' regexp '^a';  以a开头吗？  select 'abcdef' regexp 'a$';以a结尾吗？
 3.逻辑运算符
   逻辑运算符又称为布尔运算符，用来确认表达式的真和假
   运算符		作用
   NOT或!		逻辑非
   AND或&&		逻辑与
-  OR或||		逻辑或
-  XOR		逻辑异或
+  OR或||		逻辑或    select 1 and 1; 相当于是true and true---> true   数字转换成bool值；
+  XOR		逻辑异或   select 1 XOR 0; true XOR false ---> true   select 1 XOR 1; -->0  select 0 XOR 0; -->0  select 0 XOR 1; -->1
 4.运算符的优先级
   在实际运行的时候，实际上很少有人能够将运算符的优先级熟练记忆
   很多情况下我们都是用“()”来将需要优先的操作括起来，这样既起到了优先的作用，又使得其他用户看起来更易于理
@@ -55,8 +55,8 @@
 
 1.字符串函数
   函数			功能
-  CONCAT(S1,S2,...Sn)	连接S1,S2,...Sn为一个字符串
-  INSERT(str,x,y,instr)	将字符串str从第x位置开始，y个字符长的字符串换为字符串instr
+  CONCAT(S1,S2,...Sn)	连接S1,S2,...Sn为一个字符串    select concat('我','是','个','大','帅','哥'); 返回的值是连起来的
+  INSERT(str,x,y,instr)	将字符串str从第x位置开始，y个字符长的字符串换为字符串instr； select insert('我是老大woshilaoda.com',1,2,'我是替换词！')； 把前面两个字符替换成‘我是替换词！’;1是指从第一位开始；2是指删掉两个字符，用替换词替换
   LOWER(str)		将字符串str中所有字符变为小写
   UPPER(str)		将字符串str中所有字符变为大写
   LEFT(str,x)		返回字符串str最左边的x个字符
@@ -85,7 +85,7 @@
   CURDATE()		返回当前日期
   CURTIME()		返回当前时间
   NOW()			返回当前的日期和时间
-  UNIX_TIMESTAMP(date)	返回日期date的UNIX时间戳
+  UNIX_TIMESTAMP(date)	返回日期date的UNIX时间戳     select unix_timestamp(now());
   FROM_UNIXTIME()	返回UNIX时间戳的日期值
   WEEK(date)		返回日期date为一年中的第几周
   YEAR(date)		返回日期date的年份
@@ -97,11 +97,39 @@
   DATEDIFF(expr,expr2)	返回起始时间expr和结束时间expr2之间的天数		
 4.流程函数
   函数			功能
-  IF(value,t,f)		如果value是真，返回t,否则返回f
-  IFNULL(value1,value2)	如果value1不为空，返回value1，否则返回default
+  IF(value,t,f)		如果value是真，返回t,否则返回f   select if(2>1,'2>1','计算错误！');  select id, name if(field1>1000, '返回值1','返回值2') from t1;
+  IFNULL(value1,value2)	如果value1不为空，返回value1，否则返回default   
+		mysql> select ifnull(null,'空值');
+		+---------------------+
+		| ifnull(null,'空值') |
+		+---------------------+
+		| 空值                |
+		+---------------------+
+		1 row in set (0.02 sec)
+
+		mysql> select ifnull('非空','空值');
+		+-----------------------+
+		| ifnull('非空','空值') |
+		+-----------------------+
+		| 非空                  |
+		+-----------------------+
+		1 row in set (0.00 sec)
+
+  
   CASE WHEN [value1] THEN [result1]...ELSE[default]END	如果value1是真，返回result1，否则返回default
-  CASE [expr] WHEN [value1] THEN[result1]...ELSE[default]END  如果expr等于value1，返回result1，否则返回
-						default	
+  CASE [expr] WHEN [value1] THEN[result1]...ELSE[default]END  如果expr等于value1，返回result1，否则返回default	
+  select case when 100>1000 then '真' else '假' end;  和if语句比较像
+  select case 1 when 1 then '一' when 2 then '二' when 3 then '三' else '未知数字' end; 和case语句很像
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 5.其他常用函数
   函数			功能
   DATABASE()		返回当前数据库名
