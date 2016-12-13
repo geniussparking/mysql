@@ -409,6 +409,7 @@ PPT部分：
      3.删除记录
         1)删除单表中的数据  
             delete from 表名 [where 条件];
+	    delete from sfk_father_module where id=4 or 1=1， 因为1=1恒成立，这种情况会删除掉数据库所有的记录
         2)删除多个表中的数据
              delete 表1,表2,...表n from 表1,表2,...表n [where 条件];
              不管是单表还是多表，不加where条件将会把表中的所有记录删除，所以操作时一定要小心。
